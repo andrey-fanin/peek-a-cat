@@ -1,6 +1,6 @@
 <script setup>
 import GamingCard from '@/components/GamingCard.vue'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
 const cardList = ref(
   Array.from({ length: 16 }, (x, i) => ({
@@ -10,8 +10,26 @@ const cardList = ref(
   }))
 )
 
-const flipCard = (card) =>
-  (cardList.value[card.position].visible = true)
+const userSelection = ref([])
+
+const flipCard = (card) => {
+  cardList.value[card.position].visible = true
+
+  if (userSelection.value[0]) {
+    userSelection.value[1] = card
+  } else {
+    userSelection.value[0] = card
+  }
+}
+
+watch(
+  userSelection,
+  (currentValue) => {
+    if (currentValue.length === 2)
+      userSelection.value.length = []
+  },
+  { deep: true }
+)
 </script>
 
 <template>
@@ -27,6 +45,7 @@ const flipCard = (card) =>
         :position="card.position"
       />
     </section>
+    {{ userSelection }}
   </div>
 </template>
 
