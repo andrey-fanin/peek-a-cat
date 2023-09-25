@@ -1,14 +1,31 @@
 <script setup>
-import Card from '@/components/Card.vue'
+import GamingCard from '@/components/GamingCard.vue'
+import { ref } from 'vue'
 
-const cardList = Array.from({ length: 16 }, (x, i) => i++)
+const cardList = ref(
+  Array.from({ length: 16 }, (x, i) => ({
+    position: i++,
+    order: i++,
+    visible: false
+  }))
+)
+
+const flipCard = (card) =>
+  (cardList.value[card.position].visible = true)
 </script>
 
 <template>
   <div class="wrapper">
     <h1>game!</h1>
     <section class="game-board">
-      <Card v-for="card in cardList" :key="card" :order="card" />
+      <GamingCard
+        v-for="card in cardList"
+        :key="card.order"
+        :order="card.order"
+        :visible="card.visible"
+        @select-card="flipCard"
+        :position="card.position"
+      />
     </section>
   </div>
 </template>
