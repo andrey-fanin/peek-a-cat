@@ -7,7 +7,7 @@ const cardList = ref(
   Array.from({ length: 16 }, (x, i) => ({
     position: i++,
     faceValue: i++,
-    visible: true,
+    visible: false,
     matched: false
   }))
 )
@@ -17,10 +17,23 @@ const status = computed(() => {
   if (remainingPairs.value === 0) return 'Player wins!'
   return `Remaining Pairs: ${remainingPairs.value}`
 })
+
 const remainingPairs = computed(
   () => cardList.value.filter(({ matched }) => !matched).length / 2
 )
-const shuffleCards = () => (cardList.value = shuffle(cardList.value))
+
+const shuffleCards = () => {
+  cardList.value = shuffle(cardList.value)
+}
+const restartGame = () => {
+  shuffleCards()
+  cardList.value = cardList.value.map(({ faceValue }, index) => ({
+    faceValue,
+    position: index,
+    visible: false,
+    matched: false
+  }))
+}
 
 const flipCard = (card) => {
   cardList.value[card.position].visible = true
@@ -40,13 +53,9 @@ watch(
       const cardTwo = currentValue[1]
 
       if (cardOne.faceValue === cardTwo.faceValue) {
-        status.value = 'Matched!'
-
         cardList.value[cardOne.position].matched = true
         cardList.value[cardTwo.position].matched = true
       } else {
-        status.value = 'MisMatched!!!'
-
         cardList.value[cardOne.position].visible = false
         cardList.value[cardTwo.position].visible = false
       }
@@ -76,7 +85,7 @@ watch(
     >
       {{ status }}
     </h2>
-    <button @click="shuffleCards">shuffle!</button>
+    <button @click="restartGame">shuffle!</button>
   </div>
 </template>
 
