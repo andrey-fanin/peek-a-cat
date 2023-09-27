@@ -1,12 +1,13 @@
 <script setup>
 import GamingCard from '@/components/GamingCard.vue'
 import { computed, ref, watch } from 'vue'
+import { shuffle } from '@/utils/shuffleArray'
 
 const cardList = ref(
-  Array.from({ length: 2 }, (x, i) => ({
+  Array.from({ length: 16 }, (x, i) => ({
     position: i++,
-    faceValue: 7,
-    visible: false,
+    faceValue: i++,
+    visible: true,
     matched: false
   }))
 )
@@ -19,6 +20,7 @@ const status = computed(() => {
 const remainingPairs = computed(
   () => cardList.value.filter(({ matched }) => !matched).length / 2
 )
+const shuffleCards = () => (cardList.value = shuffle(cardList.value))
 
 const flipCard = (card) => {
   cardList.value[card.position].visible = true
@@ -74,6 +76,7 @@ watch(
     >
       {{ status }}
     </h2>
+    <button @click="shuffleCards">shuffle!</button>
   </div>
 </template>
 
