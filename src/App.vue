@@ -1,18 +1,25 @@
 <script setup>
 import GamingCard from '@/components/GamingCard.vue'
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 const cardList = ref(
-  Array.from({ length: 16 }, (x, i) => ({
+  Array.from({ length: 2 }, (x, i) => ({
     position: i++,
-    faceValue: i++,
+    faceValue: 7,
     visible: false,
     matched: false
   }))
 )
 
 const userSelection = ref([])
-const status = ref('')
+const status = computed(() => {
+  if (remainingPairs.value === 0) return 'Player wins!'
+  return `Remaining Pairs: ${remainingPairs.value}`
+})
+const remainingPairs = computed(
+  () => cardList.value.filter(({ matched }) => !matched).length / 2
+)
+
 const flipCard = (card) => {
   cardList.value[card.position].visible = true
 
@@ -62,15 +69,11 @@ watch(
         :position="card.position"
       />
     </section>
-    <span
-      style="
-        margin-inline: auto;
-        margin-block: 20px;
-        font-size: 20px;
-        font-family: 'Tahoma';
-      "
-      >{{ status }}</span
+    <h2
+      style="margin-inline: auto; font-size: 20px; font-family: 'Tahoma'"
     >
+      {{ status }}
+    </h2>
   </div>
 </template>
 
