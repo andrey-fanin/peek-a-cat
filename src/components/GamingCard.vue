@@ -1,30 +1,27 @@
 <script setup>
 const props = defineProps({
   position: { type: Number, required: true },
-  order: { type: Number, required: true },
-  visible: { type: Boolean, default: false }
+  faceValue: { type: Number, required: true },
+  visible: { type: Boolean, default: false },
+  matched: { type: Boolean, default: false }
 })
 const emit = defineEmits(['select-card'])
 
 const selectCard = () => {
   emit('select-card', {
-    position: props.position
+    position: props.position,
+    faceValue: props.faceValue
   })
 }
 </script>
 
 <template>
   <div class="card" @click="selectCard">
-    <div
-      v-show="visible"
-      class="card-side card-side--front"
-    >
-      {{ order }}
+    <div v-show="visible" class="card-side card-side--front">
+      {{ faceValue }} - {{ matched }}
     </div>
-    <div class="card-side card-side--back">
-      back
-    </div>
-    {{ order }}
+    <div class="card-side card-side--back">back</div>
+    {{ faceValue }}
   </div>
 </template>
 
