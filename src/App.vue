@@ -4,6 +4,7 @@ import { computed, ref, watch } from 'vue'
 import { shuffle } from '@/utils/shuffleArray'
 import { launchConfetti } from '@/utils/confetti'
 
+const newPlayer = ref(true)
 const cardList = ref([])
 
 // const cardItems = [1, 2, 3, 4, 5, 6, 7, 8]
@@ -43,6 +44,10 @@ const remainingPairs = computed(
 
 const shuffleCards = () => {
   cardList.value = shuffle(cardList.value)
+}
+const startGame = () => {
+  newPlayer.value = false
+  restartGame()
 }
 const restartGame = () => {
   shuffleCards()
@@ -113,7 +118,8 @@ watch(
     >
       {{ status }}
     </h2>
-    <button @click="restartGame">shuffle!</button>
+    <button v-if="newPlayer" @click="startGame">start!</button>
+    <button v-else @click="restartGame">shuffle!</button>
   </div>
 </template>
 
