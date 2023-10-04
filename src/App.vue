@@ -11,7 +11,7 @@ cardItems.forEach((item) => {
   const defaultCard = {
     position: null,
     faceValue: item,
-    visible: true,
+    visible: false,
     matched: false
   }
   cardList.value.push({ ...defaultCard }, { ...defaultCard })
@@ -66,8 +66,10 @@ watch(
         cardList.value[cardOne.position].matched = true
         cardList.value[cardTwo.position].matched = true
       } else {
-        cardList.value[cardOne.position].visible = false
-        cardList.value[cardTwo.position].visible = false
+        setTimeout(() => {
+          cardList.value[cardOne.position].visible = false
+          cardList.value[cardTwo.position].visible = false
+        }, 1000)
       }
 
       userSelection.value.length = []
