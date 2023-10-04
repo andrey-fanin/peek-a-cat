@@ -2,10 +2,12 @@
 import GamingCard from '@/components/GamingCard.vue'
 import { computed, ref, watch } from 'vue'
 import { shuffle } from '@/utils/shuffleArray'
+import { launchConfetti } from '@/utils/confetti'
 
 const cardList = ref([])
 
-const cardItems = [1, 2, 3, 4, 5, 6, 7, 8]
+// const cardItems = [1, 2, 3, 4, 5, 6, 7, 8]
+const cardItems = [1, 2]
 
 cardItems.forEach((item) => {
   const defaultCard = {
@@ -27,7 +29,11 @@ cardList.value = cardList.value.map((card, index) => ({
 
 const userSelection = ref([])
 const status = computed(() => {
-  if (remainingPairs.value === 0) return 'Player wins!'
+  if (remainingPairs.value === 0) {
+    launchConfetti()
+
+    return 'Player wins!'
+  }
   return `Remaining Pairs: ${remainingPairs.value}`
 })
 
