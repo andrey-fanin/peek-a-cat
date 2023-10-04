@@ -49,7 +49,11 @@ const flipCard = (card) => {
   cardList.value[card.position].visible = true
 
   if (userSelection.value[0]) {
-    userSelection.value[1] = card
+    if (
+      userSelection.value[0].position !== card.position &&
+      userSelection.value[0].faceValue !== card.faceValue
+    )
+      userSelection.value[1] = card
   } else {
     userSelection.value[0] = card
   }
