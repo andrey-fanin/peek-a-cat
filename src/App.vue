@@ -3,14 +3,24 @@ import GamingCard from '@/components/GamingCard.vue'
 import { computed, ref, watch } from 'vue'
 import { shuffle } from '@/utils/shuffleArray'
 
-const cardList = ref(
-  Array.from({ length: 16 }, (x, i) => ({
-    position: i++,
-    faceValue: i++,
-    visible: false,
+const cardList = ref([])
+
+const cardItems = [1, 2, 3, 4, 5, 6, 7, 8]
+
+cardItems.forEach((item) => {
+  const defaultCard = {
+    position: null,
+    faceValue: item,
+    visible: true,
     matched: false
-  }))
-)
+  }
+  cardList.value.push({ ...defaultCard }, { ...defaultCard })
+})
+
+cardList.value = cardList.value.map((card, index) => ({
+  ...card,
+  position: index
+}))
 
 const userSelection = ref([])
 const status = computed(() => {

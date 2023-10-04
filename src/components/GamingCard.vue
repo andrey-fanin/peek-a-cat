@@ -18,7 +18,7 @@ const selectCard = () => {
 <template>
   <div class="card" @click="selectCard">
     <div v-show="visible" class="card-side card-side--front">
-      {{ faceValue }} - {{ matched }}
+      {{ faceValue }} - {{ position }}
     </div>
     <div class="card-side card-side--back">back</div>
     {{ faceValue }}
