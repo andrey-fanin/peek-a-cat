@@ -14,7 +14,10 @@ cardItems.forEach((item) => {
     visible: false,
     matched: false
   }
-  cardList.value.push({ ...defaultCard }, { ...defaultCard })
+  cardList.value.push(
+    { ...defaultCard, variant: 1 },
+    { ...defaultCard, variant: 2 }
+  )
 })
 
 cardList.value = cardList.value.map((card, index) => ({
@@ -37,8 +40,8 @@ const shuffleCards = () => {
 }
 const restartGame = () => {
   shuffleCards()
-  cardList.value = cardList.value.map(({ faceValue }, index) => ({
-    faceValue,
+  cardList.value = cardList.value.map((card, index) => ({
+    ...card,
     position: index,
     visible: false,
     matched: false
@@ -89,16 +92,16 @@ watch(
 <template>
   <div class="wrapper">
     <h1>game!</h1>
-    <section class="game-board">
+    <transition-group tag="section" class="game-board" name="shuffle-card">
       <GamingCard
         v-for="card in cardList"
-        :key="card.faceValue"
+        :key="`${card.faceValue}-${card.variant}`"
         :face-value="card.faceValue"
         :visible="card.visible"
         @select-card="flipCard"
         :position="card.position"
       />
-    </section>
+    </transition-group>
     <h2
       style="margin-inline: auto; font-size: 20px; font-family: 'Tahoma'"
     >
@@ -125,5 +128,9 @@ watch(
   display: flex;
   flex: 1 1 25%;
   flex-wrap: wrap;
+}
+
+.shuffle-card-move {
+  transition: 0.5s transform ease-in;
 }
 </style>
