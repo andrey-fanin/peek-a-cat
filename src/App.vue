@@ -50,10 +50,13 @@ const flipCard = (card) => {
 
   if (userSelection.value[0]) {
     if (
-      userSelection.value[0].position !== card.position &&
-      userSelection.value[0].faceValue !== card.faceValue
-    )
+      userSelection.value[0].position === card.position &&
+      userSelection.value[0].faceValue === card.faceValue
+    ) {
+      return
+    } else {
       userSelection.value[1] = card
+    }
   } else {
     userSelection.value[0] = card
   }
