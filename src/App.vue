@@ -4,7 +4,6 @@ import { computed, ref, watch } from 'vue'
 import { shuffle } from '@/utils/shuffleArray'
 
 const cardList = ref([])
-console.log(cardList)
 
 const cardItems = [1, 2, 3, 4, 5, 6, 7, 8]
 
