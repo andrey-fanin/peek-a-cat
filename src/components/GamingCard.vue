@@ -24,10 +24,11 @@ const selectCard = () => {
 <template>
   <div @click="selectCard" :class="['card', flippedStyles]">
     <div class="card-side card-side--front">
-      {{ faceValue }} - {{ position }} - {{ matched }}
+      <img :src="`src/assets/${props.faceValue}.jpg`" alt="" />
     </div>
-    <div class="card-side card-side--back">back</div>
-    {{ faceValue }}
+    <div class="card-side card-side--back">
+      <img src="../assets/paws.jpg" alt="" />
+    </div>
   </div>
 </template>
 
@@ -35,7 +36,8 @@ const selectCard = () => {
 .card {
   width: 100px;
   height: 100px;
-  border: 1px solid #000;
+  border: 1px solid transparent;
+  border-radius: 10px;
   color: #fff;
   position: relative;
   transition: 0.5s rotate ease-in;
@@ -50,13 +52,18 @@ const selectCard = () => {
   width: 100%;
   height: 100%;
   backface-visibility: hidden;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  overflow: hidden;
+
   &--front {
-    background-color: #ff0000;
     position: absolute;
     rotate: y 180deg;
   }
   &--back {
-    background-color: #0000ff;
+  }
+  img {
+    width: 100%;
   }
 }
 </style>

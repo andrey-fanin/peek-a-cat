@@ -5,11 +5,12 @@ import { shuffle } from '@/utils/shuffleArray'
 import { launchConfetti } from '@/utils/confetti'
 
 const newPlayer = ref(true)
-const isMatching = ref(false)
+const canFlipCard = ref(true)
 
 const userSelection = ref([])
 let cardList = ref([])
-const cardItems = Array.from({ length: 8 })
+const cardItems = [0, 1, 2, 3, 4, 5, 6, 7]
+// const cardItems = Array.from({ length: 8 })
 
 //fill cardList.value with items from array
 //position equals index of item in cardList.value
@@ -25,7 +26,8 @@ for (const item in cardItems) {
     {
       ...defaultCard,
       position: item * 2 + 1,
-      variant: 2
+      variant: 2,
+      visible: true
     }
   )
 }
@@ -56,20 +58,19 @@ const restartGame = () => {
   cardList.value = cardList.value.map((card, index) => ({
     ...card,
     position: index,
-    visible: true,
+    visible: false,
     matched: false
   }))
 }
 
 /**
- * Represents a flip of card. <br>
- *
+ * Represents a flip of card.
  * If 2 cards are not matched, you can't select new card, until timeout is done.
  * @param card - item from cardList
  */
 
 const flipCard = (card) => {
-  if (!isMatching.value) {
+  if (canFlipCard.value) {
     cardList.value[card.position].visible = true
 
     if (userSelection.value[0]) {
@@ -97,11 +98,11 @@ watch(
         cardList.value[cardOne.position].matched = true
         cardList.value[cardTwo.position].matched = true
       } else {
-        isMatching.value = true
+        canFlipCard.value = false
         setTimeout(() => {
           cardList.value[cardOne.position].visible = false
           cardList.value[cardTwo.position].visible = false
-          isMatching.value = false
+          canFlipCard.value = true
         }, 1000)
       }
 
@@ -134,9 +135,16 @@ watch(
 </template>
 
 <style scoped lang="scss">
+body {
+  background-image: url('./assets/bg.jpg');
+  background-position: left center;
+  background-color: #565a5d;
+}
 .wrapper {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
   h1 {
     margin-inline: auto;
@@ -145,6 +153,22 @@ watch(
     margin-inline: auto;
     font-size: 20px;
     font-family: 'Tahoma', sans-serif;
+  }
+
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9a6f5e;
+    background-color: #42b8ac;
+    padding: 5px 10px;
+    outline: none;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    min-width: 100px;
   }
 }
 
