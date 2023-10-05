@@ -1,18 +1,18 @@
 <script setup>
 import GamingCard from '@/components/GamingCard.vue'
-import { computed, reactive, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { shuffle } from '@/utils/shuffleArray'
 import { launchConfetti } from '@/utils/confetti'
 
 const newPlayer = ref(true)
 const isMatching = ref(false)
 
-let userSelection = reactive([])
-let cardList = reactive([])
+const userSelection = ref([])
+let cardList = ref([])
 const cardItems = Array.from({ length: 8 })
 
-//fill cardList with items from array
-//position equals index of item in cardList
+//fill cardList.value with items from array
+//position equals index of item in cardList.value
 for (const item in cardItems) {
   const defaultCard = {
     faceValue: item,
@@ -20,7 +20,7 @@ for (const item in cardItems) {
     matched: false
   }
 
-  cardList.push(
+  cardList.value.push(
     { ...defaultCard, position: item * 2, variant: 1 },
     {
       ...defaultCard,
@@ -39,11 +39,11 @@ const status = computed(() => {
 })
 
 const remainingPairs = computed(
-  () => cardList.filter(({ matched }) => !matched).length / 2
+  () => cardList.value.filter(({ matched }) => !matched).length / 2
 )
 
 const shuffleCards = () => {
-  cardList = shuffle(cardList)
+  cardList.value = shuffle(cardList.value)
 }
 
 const startGame = () => {
@@ -53,10 +53,10 @@ const startGame = () => {
 
 const restartGame = () => {
   shuffleCards()
-  cardList = cardList.map((card, index) => ({
+  cardList.value = cardList.value.map((card, index) => ({
     ...card,
     position: index,
-    visible: false,
+    visible: true,
     matched: false
   }))
 }
@@ -70,18 +70,18 @@ const restartGame = () => {
 
 const flipCard = (card) => {
   if (!isMatching.value) {
-    cardList[card.position].visible = true
+    cardList.value[card.position].visible = true
 
-    if (userSelection[0]) {
+    if (userSelection.value[0]) {
       if (
-        userSelection[0].position === card.position &&
-        userSelection[0].faceValue === card.faceValue
+        userSelection.value[0].position === card.position &&
+        userSelection.value[0].faceValue === card.faceValue
       )
         return
 
-      userSelection[1] = card
+      userSelection.value[1] = card
     } else {
-      userSelection[0] = card
+      userSelection.value[0] = card
     }
   }
 }
@@ -94,18 +94,18 @@ watch(
       const cardTwo = currentValue[1]
 
       if (cardOne.faceValue === cardTwo.faceValue) {
-        cardList[cardOne.position].matched = true
-        cardList[cardTwo.position].matched = true
+        cardList.value[cardOne.position].matched = true
+        cardList.value[cardTwo.position].matched = true
       } else {
         isMatching.value = true
         setTimeout(() => {
-          cardList[cardOne.position].visible = false
-          cardList[cardTwo.position].visible = false
+          cardList.value[cardOne.position].visible = false
+          cardList.value[cardTwo.position].visible = false
           isMatching.value = false
         }, 1000)
       }
 
-      userSelection = []
+      userSelection.value = []
     }
   },
   { deep: true }
