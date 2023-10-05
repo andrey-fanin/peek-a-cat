@@ -3,7 +3,7 @@ import { computed } from 'vue'
 
 const props = defineProps({
   position: { type: Number, required: true },
-  faceValue: { type: Number, required: true },
+  faceValue: { type: String, required: true },
   visible: { type: Boolean, default: false },
   matched: { type: Boolean, default: false }
 })
@@ -45,6 +45,7 @@ const selectCard = () => {
     rotate: y 180deg;
   }
 }
+
 .card-side {
   width: 100%;
   height: 100%;

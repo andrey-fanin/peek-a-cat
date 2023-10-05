@@ -1,57 +1,59 @@
 <script setup>
 import GamingCard from '@/components/GamingCard.vue'
-import { computed, ref, watch } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { shuffle } from '@/utils/shuffleArray'
 import { launchConfetti } from '@/utils/confetti'
 
 const newPlayer = ref(true)
-const cardList = ref([])
+const isMatching = ref(false)
 
-// const cardItems = [1, 2, 3, 4, 5, 6, 7, 8]
-const cardItems = [1, 2]
+let userSelection = reactive([])
+let cardList = reactive([])
+const cardItems = Array.from({ length: 8 })
 
-cardItems.forEach((item) => {
+//fill cardList with items from array
+//position equals index of item in cardList
+for (const item in cardItems) {
   const defaultCard = {
-    position: null,
     faceValue: item,
     visible: false,
     matched: false
   }
-  cardList.value.push(
-    { ...defaultCard, variant: 1 },
-    { ...defaultCard, variant: 2 }
+
+  cardList.push(
+    { ...defaultCard, position: item * 2, variant: 1 },
+    {
+      ...defaultCard,
+      position: item * 2 + 1,
+      variant: 2
+    }
   )
-})
+}
 
-cardList.value = cardList.value.map((card, index) => ({
-  ...card,
-  position: index
-}))
-
-const userSelection = ref([])
 const status = computed(() => {
   if (remainingPairs.value === 0) {
     launchConfetti()
-
     return 'Player wins!'
   }
   return `Remaining Pairs: ${remainingPairs.value}`
 })
 
 const remainingPairs = computed(
-  () => cardList.value.filter(({ matched }) => !matched).length / 2
+  () => cardList.filter(({ matched }) => !matched).length / 2
 )
 
 const shuffleCards = () => {
-  cardList.value = shuffle(cardList.value)
+  cardList = shuffle(cardList)
 }
+
 const startGame = () => {
   newPlayer.value = false
   restartGame()
 }
+
 const restartGame = () => {
   shuffleCards()
-  cardList.value = cardList.value.map((card, index) => ({
+  cardList = cardList.map((card, index) => ({
     ...card,
     position: index,
     visible: false,
@@ -59,20 +61,28 @@ const restartGame = () => {
   }))
 }
 
-const flipCard = (card) => {
-  cardList.value[card.position].visible = true
+/**
+ * Represents a flip of card. <br>
+ *
+ * If 2 cards are not matched, you can't select new card, until timeout is done.
+ * @param card - item from cardList
+ */
 
-  if (userSelection.value[0]) {
-    if (
-      userSelection.value[0].position === card.position &&
-      userSelection.value[0].faceValue === card.faceValue
-    ) {
-      return
+const flipCard = (card) => {
+  if (!isMatching.value) {
+    cardList[card.position].visible = true
+
+    if (userSelection[0]) {
+      if (
+        userSelection[0].position === card.position &&
+        userSelection[0].faceValue === card.faceValue
+      )
+        return
+
+      userSelection[1] = card
     } else {
-      userSelection.value[1] = card
+      userSelection[0] = card
     }
-  } else {
-    userSelection.value[0] = card
   }
 }
 
@@ -84,16 +94,18 @@ watch(
       const cardTwo = currentValue[1]
 
       if (cardOne.faceValue === cardTwo.faceValue) {
-        cardList.value[cardOne.position].matched = true
-        cardList.value[cardTwo.position].matched = true
+        cardList[cardOne.position].matched = true
+        cardList[cardTwo.position].matched = true
       } else {
+        isMatching.value = true
         setTimeout(() => {
-          cardList.value[cardOne.position].visible = false
-          cardList.value[cardTwo.position].visible = false
+          cardList[cardOne.position].visible = false
+          cardList[cardTwo.position].visible = false
+          isMatching.value = false
         }, 1000)
       }
 
-      userSelection.value.length = []
+      userSelection = []
     }
   },
   { deep: true }
@@ -113,9 +125,7 @@ watch(
         :position="card.position"
       />
     </transition-group>
-    <h2
-      style="margin-inline: auto; font-size: 20px; font-family: 'Tahoma'"
-    >
+    <h2>
       {{ status }}
     </h2>
     <button v-if="newPlayer" @click="startGame">start!</button>
@@ -130,6 +140,11 @@ watch(
 
   h1 {
     margin-inline: auto;
+  }
+  h2 {
+    margin-inline: auto;
+    font-size: 20px;
+    font-family: 'Tahoma', sans-serif;
   }
 }
 
