@@ -34,8 +34,8 @@ const selectCard = () => {
 
 <style scoped lang="scss">
 .card {
-  width: 100px;
-  height: 100px;
+  width: var(--card-size);
+  height: var(--card-size);
   border: 1px solid transparent;
   border-radius: 10px;
   color: #fff;

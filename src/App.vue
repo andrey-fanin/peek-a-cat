@@ -115,7 +115,7 @@ watch(
 
 <template>
   <div class="wrapper">
-    <h1>game!</h1>
+    <h1>Peek-a-cat!</h1>
     <transition-group tag="section" class="game-board" name="shuffle-card">
       <GamingCard
         v-for="card in cardList"
@@ -129,17 +129,12 @@ watch(
     <h2>
       {{ status }}
     </h2>
-    <button v-if="newPlayer" @click="startGame">start!</button>
-    <button v-else @click="restartGame">shuffle!</button>
+    <button v-if="newPlayer" @click="startGame">start</button>
+    <button v-else @click="restartGame">shuffle</button>
   </div>
 </template>
 
 <style scoped lang="scss">
-body {
-  background-image: url('./assets/bg.jpg');
-  background-position: left center;
-  background-color: #565a5d;
-}
 .wrapper {
   display: flex;
   flex-direction: column;
@@ -152,7 +147,6 @@ body {
   h2 {
     margin-inline: auto;
     font-size: 20px;
-    font-family: 'Tahoma', sans-serif;
   }
 
   button {
@@ -173,7 +167,7 @@ body {
 }
 
 .game-board {
-  width: calc(102px * 4 + 10px * 3);
+  width: calc((var(--card-size) + 2px) * 4 + 10px * 3);
   gap: 10px;
   margin-inline: auto;
   display: flex;
